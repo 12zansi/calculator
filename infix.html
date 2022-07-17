@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>infix to postfix</title>
+</head>
+<body>
+    <pre></pre>
+    <script>
+    log(infixToPostfix(tokenize("11 + 2")));
+    log(infixToPostfix(tokenize("1 + 2 * 3")));
+    log(infixToPostfix(tokenize("1 * (2 + 3 * 4) + 5")));
+    
+    // Algorithm from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm
+    function infixToPostfix(infix){
+        const presedences = ["-", "+", "*", "/"];
+        
+        var opsStack = [],
+            postfix = [];
+        
+        for(let token of infix){
+            // Step 1
+            if("number" === typeof token){
+                postfix.push(token); continue;
+            }
+            let topOfStack = opsStack[opsStack.length - 1];
+            // Step 2
+            if(!opsStack.length || topOfStack == "("){
+                opsStack.push(token); continue;
+            }
+            // Step 3
+            if(token == "("){
+                opsStack.push(token); continue;
+            }
+            // Step 4
+            if(token == ")"){
+                while(opsStack.length){
+                    let op = opsStack.pop();
+                    if(op == "(")	break;
+                    postfix.push(op);
+                }
+                continue;
+            }
+            // Step 5
+            let prevPresedence = presedences.indexOf(topOfStack),
+                currPresedence = presedences.indexOf(token);
+            while(currPresedence < prevPresedence){
+                let op = opsStack.pop();
+                postfix.push(op);
+                prevPresedence = presedences.indexOf(opsStack[opsStack.length - 1]);
+            }
+            opsStack.push(token);
+        }
+        // Step 6
+        while(opsStack.length){
+            let op = opsStack.pop();
+            if(op == "(")	break;
+            postfix.push(op);
+        }
+        
+        return postfix;
+    }
+    
+    function tokenize(exp){
+        return exp
+            .replace(/\s/g, "")
+            .split("")
+            .map((token, i) => /^\d$/.test(token) ? +token : token);
+    }
+    
+    function log(obj){
+        document.querySelector("pre").textContent += JSON.stringify(obj) + "\n";
+    }
+
+// Javascript program to evaluate value of a postfix expression
+
+// Method to evaluate value of a postfix expression
+function evaluatePostfix(exp)
+{
+	//create a stack
+		let stack=[];
+		
+		// Scan all characters one by one
+		for(let i=0;i<exp.length;i++)
+		{
+			let c=exp[i];
+			
+			// If the scanned character is an operand (number here),
+			// push it to the stack.
+			if(! isNaN( parseInt(c) ))
+			stack.push(c.charCodeAt(0) - '0'.charCodeAt(0));
+			
+			// If the scanned character is an operator, pop two
+			// elements from stack apply the operator
+			else
+			{
+				let val1 = stack.pop();
+				let val2 = stack.pop();
+				
+				switch(c)
+				{
+					case '+':
+					stack.push(val2+val1);
+					break;
+					
+					case '-':
+					stack.push(val2- val1);
+					break;
+					
+					case '/':
+					stack.push(val2/val1);
+					break;
+					
+					case '*':
+					stack.push(val2*val1);
+					break;
+			}
+			}
+		}
+		return stack.pop();
+}
+
+// Driver program to test above functions
+let exp="1234*+*5+";
+document.write("postfix evaluation: "+evaluatePostfix(exp));
+
+// This code is contributed by avanitrachhadiya2155
+
+</script>
+</body>
+</html>
