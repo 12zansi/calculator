@@ -9,7 +9,6 @@ body{
 }
 .container{
     width: 45%;
-    height:48vh;
     padding: 10px;
     border-radius: 8px;
     box-shadow: 12px 12px 20px #cbced1,
@@ -34,12 +33,19 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 1.7em;
+    margin-top: .1em;
+    flex-direction: column;
+}
+.btnv{
+    width: 100%;
+    display: flex;
+    margin-left: 2em;
+    margin-top: 1.2em;
     flex-direction: column;
 }
 
-.btns .row button{
-    width: 80px;
+.row button{
+    width: 120px;
     height: 30px;
     border-radius: 4px;
     margin: 5px;
